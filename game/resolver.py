@@ -1,10 +1,48 @@
 from game.field import Field
 
-class Resolver:
-    def __init__(self, field: Field, max_solves: int):
-        self.field = field
-        self.max_solves = max_solves
 
-    def find_solves(self):
-        """Возвращает решения переданной головоломки, пока не знаю как: итератором или списком"""
-        pass
+class Resolver:
+    @staticmethod
+    def find_solves(field: Field, max_solves: int = 0):
+        solve_counter = [0]
+        yield from Resolver._find_solves_recursive(field.copy(), max_solves,
+                                                   solve_counter)
+
+    @staticmethod
+    def _find_solves_recursive(current_field: Field, max_solves: int,
+                               solve_counter: list[int]):
+        if 0 < max_solves <= solve_counter[0]:
+            return
+
+        try:
+            x, y = next((r, c)
+                        for r in range(current_field.width)
+                        for c in range(current_field.height)
+                        if current_field.cells[r][c].is_unpainted)
+
+        except StopIteration:
+            if current_field.is_solve():
+                solve_counter[0] += 1
+                yield current_field
+
+            return
+
+        equals = current_field.find_equal_cells(x, y)
+
+        if equals:
+            next_field_state_painted = current_field.copy()
+            next_field_state_painted.cells[x][y].paint()
+
+            for i, j in equals:
+                next_field_state_painted.cells[i][j].paint()
+
+            yield from Resolver._find_solves_recursive(
+                next_field_state_painted,
+                max_solves,
+                solve_counter)
+
+
+        current_field.cells[x][y].paint()
+        yield from Resolver._find_solves_recursive(current_field,
+                                                   max_solves,
+                                                   solve_counter)
