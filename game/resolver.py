@@ -5,8 +5,9 @@ class Resolver:
     @staticmethod
     def find_solves(field: Field, max_solves: int = 0):
         solve_counter = [0]
-        yield from Resolver._find_solves_recursive(field.copy(), max_solves,
-                                                   solve_counter)
+        yield from Resolver._find_solves_recursive(field.copy(),
+                                                          max_solves,
+                                                          solve_counter)
 
     @staticmethod
     def _find_solves_recursive(current_field: Field, max_solves: int,
@@ -15,34 +16,28 @@ class Resolver:
             return
 
         try:
-            x, y = next((r, c)
-                        for r in range(current_field.width)
-                        for c in range(current_field.height)
-                        if current_field.cells[r][c].is_unpainted)
-
+            x, y = next((r, c) for r in range(current_field.width) for c in
+                        range(current_field.height) if
+                        current_field.cells[r][c].is_unpainted)
         except StopIteration:
             if current_field.is_solve():
                 solve_counter[0] += 1
                 yield current_field
-
             return
+
+        next_field_unpainted = current_field.copy()
+        yield from Resolver._find_solves_recursive(
+            next_field_unpainted.cells[x][y].paint() or next_field_unpainted,
+            max_solves, solve_counter)
 
         equals = current_field.find_equal_cells(x, y)
 
         if equals:
-            next_field_state_painted = current_field.copy()
-            next_field_state_painted.cells[x][y].paint()
+            next_field_painted = current_field.copy()
+            next_field_painted.cells[x][y].paint()
 
             for i, j in equals:
-                next_field_state_painted.cells[i][j].paint()
+                next_field_painted.cells[i][j].paint()
 
             yield from Resolver._find_solves_recursive(
-                next_field_state_painted,
-                max_solves,
-                solve_counter)
-
-
-        current_field.cells[x][y].paint()
-        yield from Resolver._find_solves_recursive(current_field,
-                                                   max_solves,
-                                                   solve_counter)
+                next_field_painted, max_solves, solve_counter)
