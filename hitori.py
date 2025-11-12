@@ -30,3 +30,7 @@ def run():
     )
 
     solver.print()
+
+
+if __name__ == '__main__':
+    run()
