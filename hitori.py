@@ -1,17 +1,32 @@
 import argparse
-import os
-import sys
-from interface.interface import get_path, solve_file
 
-hitori_parser = argparse.ArgumentParser(description='Hitori')
+from solver import Solver
 
-hitori_parser.add_argument('--open', required = True, help = 'open file')
-hitori_parser.add_argument('--solve', action="store_true", help = 'solves hitori')
 
-args = hitori_parser.parse_args()
-path = None
-if args.open:
-    path = get_path(args.open)
+def parse_arguments():
+    hitori_parser = argparse.ArgumentParser(description='Hitori')
 
-if args.solve:
-    print(solve_file(path))
+    hitori_parser.add_argument(
+        "-m", "max_solves",
+        type=int,
+        default=5,
+        help='max number of solves'
+    )
+    hitori_parser.add_argument(
+        'filename',
+        type=str,
+        help='open file'
+    )
+
+    return hitori_parser.parse_args()
+
+
+def run():
+    args = parse_arguments()
+
+    solver = Solver(
+        filename=args.filename,
+        max_solves=args.max_solves
+    )
+
+    solver.print()

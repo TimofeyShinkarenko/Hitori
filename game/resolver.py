@@ -3,7 +3,7 @@ from game.field import Field
 
 class Resolver:
     @staticmethod
-    def find_solves(field: Field, max_solves: int = 0):
+    def find_solves(field: Field, max_solves: int = 5):
         solve_counter = [0]
         yield from Resolver._find_solves_recursive(field.copy(),
                                                           max_solves,
