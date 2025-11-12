@@ -1,5 +1,5 @@
+#!/usr/bin/env python3
 import argparse
-
 from solver import Solver
 
 
@@ -7,7 +7,7 @@ def parse_arguments():
     hitori_parser = argparse.ArgumentParser(description='Hitori')
 
     hitori_parser.add_argument(
-        "-m", "max_solves",
+        "-m", "--max_solves",
         type=int,
         default=5,
         help='max number of solves'
@@ -15,7 +15,7 @@ def parse_arguments():
     hitori_parser.add_argument(
         'filename',
         type=str,
-        help='open file'
+        help='input filename'
     )
 
     return hitori_parser.parse_args()

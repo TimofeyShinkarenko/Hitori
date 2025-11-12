@@ -1,4 +1,6 @@
 import os
+import sys
+
 from game.resolver import Resolver
 from game.parser import Parser
 from interface.writer import Writer
@@ -26,3 +28,7 @@ class Solver:
     def print(self):
         for solve in self.solve():
             print(Writer.parse_field_to_text(solve), end='\n\n')
+
+
+solver = Solver('field.txt', 4)
+solver.print()
