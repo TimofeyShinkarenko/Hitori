@@ -7,12 +7,13 @@ from interface.writer import Writer
 
 
 class Solver:
-    def __init__(self, filename: str, max_solves: int):
+    def __init__(self, filename: str, max_solves: int, num_components: int):
         with open(filename, 'r') as f:
             data = f.readlines()
             self.field = Parser.parse_lines_to_field(data)
 
         self.max_solves = max_solves
+        self.num_components = num_components
 
     @staticmethod
     def get_path(filename):
@@ -22,13 +23,15 @@ class Solver:
             return os.path.join(os.getcwd(), filename)
 
     def solve(self):
-        for solve in Resolver.find_solves(self.field, self.max_solves):
+        hitori_solver = Resolver(
+            num_components=self.num_components,
+            field=self.field,
+            max_solves=self.max_solves,
+        )
+
+        for solve in hitori_solver.find_solves():
             yield solve
 
     def print(self):
         for solve in self.solve():
-            print(Writer.parse_field_to_text(solve), end='\n\n')
-
-
-solver = Solver('field.txt', 4)
-solver.print()
+            print(Writer.parse_field_to_text(solve), end='\n')

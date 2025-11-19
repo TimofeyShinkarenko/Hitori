@@ -13,6 +13,12 @@ def parse_arguments():
         help='max number of solves'
     )
     hitori_parser.add_argument(
+        "-c", "--num_components",
+        type=int,
+        default=1,
+        help='number of connected components'
+    )
+    hitori_parser.add_argument(
         'filename',
         type=str,
         help='input filename'
@@ -26,7 +32,8 @@ def run():
 
     solver = Solver(
         filename=args.filename,
-        max_solves=args.max_solves
+        max_solves=args.max_solves,
+        num_components=args.num_components
     )
 
     solver.print()

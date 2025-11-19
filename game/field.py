@@ -37,39 +37,34 @@ class Field:
                                 return False
         return True
 
-    def are_unpainted_cells_connected(self) -> bool:
-        first_unpainted = None
-        total_unpainted = 0
+    def count_unpainted_components(self, num_components: int) -> bool:
+        visited = set()
+        components = 0
 
         for x in range(self.width):
             for y in range(self.height):
 
-                if self.cells[x][y].is_unpainted:
-                    if first_unpainted is None:
-                        first_unpainted = (x, y)
-                    total_unpainted += 1
+                if self.cells[x][y].is_unpainted and (x, y) not in visited:
+                    components += 1
 
-        if total_unpainted == 0:
-            return True
+                    q = deque([(x, y)])
+                    visited.add((x, y))
 
-        q = deque([first_unpainted])
-        visited = {first_unpainted}
+                    while q:
+                        curr_x, curr_y = q.popleft()
 
-        while q:
-            x, y = q.popleft()
+                        for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                            nx, ny = curr_x + dx, curr_y + dy
+                            neighbor = (nx, ny)
 
-            for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-                nx, ny = x + dx, y + dy
+                            if (0 <= nx < self.width and
+                                    0 <= ny < self.height and
+                                    self.cells[nx][ny].is_unpainted and
+                                    neighbor not in visited):
+                                visited.add(neighbor)
+                                q.append(neighbor)
 
-                if 0 <= nx < self.width and 0 <= ny < self.height:
-                    neighbor = (nx, ny)
-
-                    if self.cells[nx][
-                        ny].is_unpainted and neighbor not in visited:
-                        visited.add(neighbor)
-                        q.append(neighbor)
-
-        return len(visited) == total_unpainted
+        return components == num_components
 
     def are_unpainted_values_unique(self) -> bool:
         for y in range(self.height):
@@ -122,8 +117,8 @@ class Field:
 
         return equal_cells_indexes
 
-    def is_solve(self):
-        return self.are_unpainted_cells_connected() and self.are_unpainted_values_unique() and self.has_no_painted_neighbors()
+    def is_solve(self, num_components: int) -> bool:
+        return self.count_unpainted_components(num_components) and self.are_unpainted_values_unique() and self.has_no_painted_neighbors()
 
     def copy(self):
         new_cells = [[copy.deepcopy(cell) for cell in row] for row in
