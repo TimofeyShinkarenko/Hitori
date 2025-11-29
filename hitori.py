@@ -28,15 +28,18 @@ def parse_arguments():
 
 
 def run():
-    args = parse_arguments()
+    try:
+        args = parse_arguments()
 
-    solver = Solver(
-        filename=args.filename,
-        max_solves=args.max_solves,
-        num_components=args.num_components
-    )
+        solver = Solver(
+            filename=args.filename,
+            max_solves=args.max_solves,
+            num_components=args.num_components
+        )
 
-    solver.print()
+        solver.print()
+    except Exception as e:
+        print(e)
 
 
 if __name__ == '__main__':
