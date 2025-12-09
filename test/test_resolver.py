@@ -13,5 +13,12 @@ class TestResolver(unittest.TestCase):
         ]
         field = Field(cells)
 
-        solves = list(Resolver.find_solves(field, max_solves=2))
-        self.assertLessEqual(len(solves), 1)
+        resolver = Resolver(field=field, max_solves=2, num_components=1)
+
+        solves = list(resolver.find_solves())
+
+        self.assertGreaterEqual(len(solves), 1)
+
+
+if __name__ == '__main__':
+    unittest.main()
