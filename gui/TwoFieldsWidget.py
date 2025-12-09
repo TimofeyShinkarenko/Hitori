@@ -1,11 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QHBoxLayout, QVBoxLayout, QPushButton
 
 from game.field import Field
-from interface.UI.FieldWidget import FieldWidget
+from .FieldWidget import FieldWidget
 
 
 class TwoFieldsWidget(QWidget):
-    def __init__(self, cell_size, field: Field, solutions: [Field]):
+    def __init__(self, cell_size, field: Field, solutions: list[Field]):
         super().__init__()
         self.index = 0
         self.solutions_count = len(solutions)
@@ -29,11 +29,11 @@ class TwoFieldsWidget(QWidget):
         self.right_container.addWidget(self.right_field)
         self.top_row.addLayout(self.right_container)
 
-        self.next_button = QPushButton("кнопка справа")
+        self.next_button = QPushButton("След. решение")
         self.next_button.setFixedHeight(40)
         self.next_button.clicked.connect(self.next_button_clicked)
 
-        self.prev_button = QPushButton("кнопка слева")
+        self.prev_button = QPushButton("Пред. решение")
         self.prev_button.setFixedHeight(40)
         self.prev_button.clicked.connect(self.prev_button_clicked)
         self.prev_button.setEnabled(False)

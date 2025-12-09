@@ -1,9 +1,11 @@
 import os
+import sys
+from PyQt5.QtWidgets import QApplication
 
 from game.field import Field
 from game.resolver import Resolver
 from interface.parser import Parser
-from interface.writer import Writer
+from gui.SolutionViewer import SolutionViewer
 
 
 class Solver:
@@ -37,6 +39,11 @@ class Solver:
         for solve in hitori_solver.find_solves():
             yield solve
 
-    def print(self):
-        for solve in self.solve():
-            print(Writer.parse_field_to_text(solve), end='\n')
+    def show_gui(self):
+        app = QApplication(sys.argv)
+        solutions = list(self.solve())
+        data = [(self.field, solutions)]
+
+        window = SolutionViewer(data)
+        window.show()
+        sys.exit(app.exec_())

@@ -20,16 +20,6 @@ class CellWidget(QWidget):
         self.filled = True
         self.update()
 
-
-    '''
-    #просто прикольно было потыкаться
-    def mousePressEvent(self, event):
-        if not self.filled:
-            self.filled = True
-        else:
-            self.filled = False
-        self.update()'''
-
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(QPen(Qt.black, 1))

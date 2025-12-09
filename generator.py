@@ -51,7 +51,7 @@ def run():
         generate_fields=args.fields,
     )
 
-    creator.create()
+    creator.run_gui()
 
 
 if __name__ == '__main__':

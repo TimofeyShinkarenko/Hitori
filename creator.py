@@ -1,7 +1,9 @@
-from game.field import Field
+import sys
+from PyQt5.QtWidgets import QApplication
+
 from generate.field_generator import FieldGenerator
 from solver import Solver
-from interface.writer import Writer
+from gui.SolutionViewer import SolutionViewer
 
 
 class Creator:
@@ -16,7 +18,10 @@ class Creator:
 
         self.generator = FieldGenerator(self.width, self.height)
 
-    def create(self):
+    def run_gui(self):
+        app = QApplication(sys.argv)
+
+        tasks_data = []
         counter = 0
 
         while counter < self.generate_fields:
@@ -30,14 +35,11 @@ class Creator:
             solves = list(solver.solve())
             if solves:
                 counter += 1
+                tasks_data.append((field, solves))
 
-                self.print_task_and_solution(field, solves)
-
-    @staticmethod
-    def print_task_and_solution(field: Field, solves: list[Field]):
-        print(Writer.parse_field_to_text(field), end='\n\n')
-
-        for solve in solves:
-            print(Writer.parse_field_to_text(solve), end='\n')
-
-        print('---')
+        if tasks_data:
+            window = SolutionViewer(tasks_data)
+            window.show()
+            sys.exit(app.exec_())
+        else:
+            print("Не удалось сгенерировать корректные поля.")

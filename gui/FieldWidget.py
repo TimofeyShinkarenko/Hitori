@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QFrame, QGridLayout
 
 from game.field import Field
-from interface.UI.CellWidget import CellWidget
+from .CellWidget import CellWidget
 
 
 class FieldWidget(QFrame):

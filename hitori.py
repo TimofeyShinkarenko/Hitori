@@ -37,7 +37,7 @@ def run():
             num_components=args.num_components
         )
 
-        solver.print()
+        solver.show_gui()
     except Exception as e:
         print(e)
 
